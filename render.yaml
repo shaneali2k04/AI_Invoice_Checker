@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: invoice-backend
+    env: python
+    region: oregon
+    buildCommand: "./build.sh"
+    startCommand: "./start.sh"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: INVOICE_EXTRACT_DPI
+        value: 200
+      - key: INVOICE_RETRY_DPI
+        value: 300
+      - key: INVOICE_PAGE_CONCURRENCY
+        value: 3
+      - key: INVOICE_PAGE_TIMEOUT_S
+        value: 180

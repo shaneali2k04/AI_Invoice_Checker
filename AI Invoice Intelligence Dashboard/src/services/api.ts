@@ -1,6 +1,9 @@
 import type { InvoiceField, ProblematicInvoice, User } from '@/types/models';
 import type { Invoice } from '@/types/models';
 
+// API base URL - use environment variable for deployment
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
 export type ApiInvoiceListItem = {
   id: string;
   document_id: string;
@@ -49,7 +52,7 @@ export type ApiInvoiceDetail = {
 export async function uploadDocument(file: File) {
   const form = new FormData();
   form.append('file', file);
-  const res = await fetch('/api/documents', { method: 'POST', body: form });
+  const res = await fetch(`${API_BASE_URL}/api/documents`, { method: 'POST', body: form });
   if (!res.ok) throw new Error(await res.text());
   return (await res.json()) as { job_id: string; document_id: string };
 }
@@ -70,25 +73,25 @@ export type ApiJobStatus = {
 };
 
 export async function getJob(jobId: string) {
-  const res = await fetch(`/api/jobs/${jobId}`);
+  const res = await fetch(`${API_BASE_URL}/api/jobs/${jobId}`);
   if (!res.ok) throw new Error(await res.text());
   return (await res.json()) as ApiJobStatus;
 }
 
 export async function listJobs(limit = 50) {
-  const res = await fetch(`/api/jobs?limit=${encodeURIComponent(String(limit))}`);
+  const res = await fetch(`${API_BASE_URL}/api/jobs?limit=${encodeURIComponent(String(limit))}`);
   if (!res.ok) throw new Error(await res.text());
   return (await res.json()) as ApiJobStatus[];
 }
 
 export async function listInvoices() {
-  const res = await fetch('/api/invoices');
+  const res = await fetch(`${API_BASE_URL}/api/invoices`);
   if (!res.ok) throw new Error(await res.text());
   return (await res.json()) as ApiInvoiceListItem[];
 }
 
 export async function exportInvoicesXlsx(): Promise<{ blob: Blob; filename: string }> {
-  const res = await fetch('/api/invoices/export.xlsx');
+  const res = await fetch(`${API_BASE_URL}/api/invoices/export.xlsx`);
   if (!res.ok) throw new Error(await res.text());
   const blob = await res.blob();
   const cd = res.headers.get('Content-Disposition') || '';
@@ -98,19 +101,19 @@ export async function exportInvoicesXlsx(): Promise<{ blob: Blob; filename: stri
 }
 
 export async function listAIReview() {
-  const res = await fetch('/api/ai-review');
+  const res = await fetch(`${API_BASE_URL}/api/ai-review`);
   if (!res.ok) throw new Error(await res.text());
   return (await res.json()) as ApiInvoiceListItem[];
 }
 
 export async function getInvoiceDetail(id: string) {
-  const res = await fetch(`/api/invoices/${id}`);
+  const res = await fetch(`${API_BASE_URL}/api/invoices/${id}`);
   if (!res.ok) throw new Error(await res.text());
   return (await res.json()) as ApiInvoiceDetail;
 }
 
 export async function updateInvoice(id: string, payload: { status?: string; edited?: Record<string, unknown> }) {
-  const res = await fetch(`/api/invoices/${id}`, {
+  const res = await fetch(`${API_BASE_URL}/api/invoices/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -121,13 +124,13 @@ export async function updateInvoice(id: string, payload: { status?: string; edit
 
 export async function listParties(party_type?: 'supplier' | 'buyer') {
   const qs = party_type ? `?party_type=${encodeURIComponent(party_type)}` : '';
-  const res = await fetch(`/api/parties${qs}`);
+  const res = await fetch(`${API_BASE_URL}/api/parties${qs}`);
   if (!res.ok) throw new Error(await res.text());
   return (await res.json()) as ApiParty[];
 }
 
 export async function requestRescan(id: string, payload: { reasons?: string[]; unreadable_fields?: string[] }) {
-  const res = await fetch(`/api/invoices/${id}/request-rescan`, {
+  const res = await fetch(`${API_BASE_URL}/api/invoices/${id}/request-rescan`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -139,7 +142,7 @@ export async function requestRescan(id: string, payload: { reasons?: string[]; u
 export async function reuploadInvoice(id: string, file: File) {
   const form = new FormData();
   form.append('file', file);
-  const res = await fetch(`/api/invoices/${id}/reupload`, { method: 'POST', body: form });
+  const res = await fetch(`${API_BASE_URL}/api/invoices/${id}/reupload`, { method: 'POST', body: form });
   if (!res.ok) throw new Error(await res.text());
   return (await res.json()) as ApiInvoiceDetail;
 }
