@@ -5,6 +5,19 @@
 
   export default defineConfig({
     plugins: [react()],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom'],
+            ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
+            charts: ['recharts'],
+            pdf: ['pdfjs-dist'],
+          },
+        },
+      },
+      chunkSizeWarningLimit: 1000, // Increase limit to reduce warnings
+    },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
