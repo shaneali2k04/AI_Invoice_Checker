@@ -1,9 +1,10 @@
 {
-  "buildCommand": "cd \"AI Invoice Intelligence Dashboard\" && npm run build",
-  "outputDirectory": "AI Invoice Intelligence Dashboard/dist",
-  "devCommand": "cd \"AI Invoice Intelligence Dashboard\" && npm run dev",
-  "installCommand": "cd \"AI Invoice Intelligence Dashboard\" && npm install",
-  "framework": null,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "vite",
+  "rootDirectory": "AI Invoice Intelligence Dashboard",
   "rewrites": [
     {
       "source": "/(.*)",
